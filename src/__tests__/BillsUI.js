@@ -12,7 +12,7 @@ import router from "../app/Router.js";
 
 describe("Given I am connected as an employee", () => {
   describe("When I am on Bills Page", () => {
-    test("Then bill icon in vertical layout should be highlighted", async () => {
+    test("Bill icon in vertical layout should be highlighted", async () => {
       Object.defineProperty(window, "localStorage", {
         value: localStorageMock,
       });
@@ -32,7 +32,8 @@ describe("Given I am connected as an employee", () => {
       //to-do write expect expression
       expect(windowIcon.classList.contains("active-icon")).toBe(true);
     });
-    test("Then bills should be ordered from earliest to latest", () => {
+
+    test("Bills should be ordered from earliest to latest", () => {
       document.body.innerHTML = BillsUI({ data: bills });
       const dates = screen
         .getAllByText(

@@ -17,13 +17,29 @@ export default class NewBill {
     this.billId = null;
     new Logout({ document, localStorage, onNavigate });
   }
+
+  handleFileType = (target) => {
+    target.setCustomValidity("");
+    const fileExtension = target.files[0].type.split("/").pop();
+    const allowedExtensions = ["jpg", "jpeg", "png"];
+    if (!allowedExtensions.includes(fileExtension)) {
+      target.setCustomValidity("Formats acceptés : jpg, jpeg et png");
+      target.reportValidity();
+      target.value = null;
+      return false;
+    }
+  };
+
   handleChangeFile = (e) => {
     e.preventDefault();
-    const file = this.document.querySelector(`input[data-testid="file"]`)
-      .files[0];
 
     const filePath = e.target.value.split(/\\/g);
     const fileName = filePath[filePath.length - 1];
+
+    if (!this.handleFileType(e.target)) return;
+
+    const file = this.document.querySelector(`input[data-testid="file"]`)
+      .files[0];
 
     const formData = new FormData();
     const email = JSON.parse(localStorage.getItem("user")).email;
@@ -46,22 +62,15 @@ export default class NewBill {
       })
       .catch((error) => console.error(error));
   };
+
   handleSubmit = (e) => {
     e.preventDefault();
-
-    const fileExtensionRegex = /\.(jpg|jpeg|png)$/i;
-    if (fileExtensionRegex.test(this.fileName)) {
-      console.log("Le fichier est une image JPG, JPEG ou PNG.");
-    } else {
-      console.log("Le fichier n'a pas une extension valide.");
-      alert("Le fichier n'a pas une extension valide.");
-      return;
-    }
 
     console.log(
       'e.target.querySelector(`input[data-testid="datepicker"]`).value',
       e.target.querySelector(`input[data-testid="datepicker"]`).value
     );
+
     const email = JSON.parse(localStorage.getItem("user")).email;
     const bill = {
       email,
